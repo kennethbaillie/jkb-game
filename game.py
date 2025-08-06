@@ -32,9 +32,6 @@ class PoolScene(Scene):
         self.cue_ball.category_bitmask = 1
       else:
         self.cue_ball.position = (0, -290)
-  
-     
-        
 
 scene = PoolScene(
   background_color='green',
@@ -43,60 +40,27 @@ scene = PoolScene(
   #physics_debug=True,
 )
 
-
 v = 240
 h = 130
-h_shift = 5
 
 ball_pos = vector.Vector(0, 110)
-player1 = 'blue'
-player2 = 'red'
 
-def get_highlight_color(color):
-  c = list(ui.parse_color(color))
-  for i in range(3):
-    v = c[i]
-    c[i] = min(1.0, v + .5)
-  return tuple(c)
-  
-CircleNode(
-  name='ball',
-  radius=ball_radius,
-  fill_color=player1,
-  line_color=get_highlight_color(player1),
-  category_bitmask=1,
-  collision_bitmask=1,
-  parent=scene,
-  position=tuple(ball_pos),
+platforms = (
+  (60, "blue"),
+  (180, "blue"),
+  (120, "blue")
 )
-  
-balls = (
-  (60, player2),
-  (180, player1),
-  (120, player2),
-  (0, 'black'),
-  (0, player1),
-  (60, player2),
-  (180, player1),
-  (180, player2),
-  (180, player1),
-  (120, player2),
-  (0, player1),
-  (0, player2),
-  (0, player2),
-  (0, player1),
-)
-vector
+
 to_next_ball = vector.Vector(2*ball_radius,0)
-for angle, color in balls:
+for angle, color in platforms:
   to_next_ball.degrees = angle
   ball_pos += to_next_ball
   x,y = ball_pos
   
-  CircleNode(
+  BoxNode(
     radius=ball_radius,
     fill_color=color,
-    line_color=get_highlight_color(color),
+    line_color=color,
     category_bitmask=1,
     collision_bitmask=1,
     parent=scene,
