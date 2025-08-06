@@ -6,38 +6,32 @@ from spritekit import *
 import ui, math, random
 import vector
 
-ball_radius = 13
-
-class PoolScene(Scene):
+class game_scene(Scene):
   
   def touch_moved(self, touch):
-    if self.cue_ball.collision_bitmask == 1:
+    if self.player.collision_bitmask == 1:
       p = ui.Path()
-      p.line_to(*(self.cue_ball.position - touch.location))
-      self.power_indicator.path = p
-      self.power_indicator.position = touch.location
-      self.power_indicator.hidden = False
+      p.line_to(*(self.player.position - touch.location))
     else:
-      self.cue_ball.position = touch.location
+      self.player.position = touch.location
   
   def touch_ended(self, touch):
-    if self.cue_ball.collision_bitmask == 1:
-      t = self.cue_ball.position - touch.location
-      self.cue_ball.velocity = (3*t.x, 3*t.y)
-      self.power_indicator.hidden = True
+    if self.player.collision_bitmask == 1:
+      t = self.player.position - touch.location
+      self.player.velocity = (3*t.x, 3*t.y)
     else:
       play_area = Rect(-118, -228, 236, 456)
       if play_area.contains_point(touch.location):
-        self.cue_ball.collision_bitmask = 1
-        self.cue_ball.category_bitmask = 1
+        self.player.collision_bitmask = 1
+        self.player.category_bitmask = 1
       else:
-        self.cue_ball.position = (0, -290)
+        self.player.position = (0, -290)
 
-scene = PoolScene(
-  background_color='green',
-  physics=BilliardsPhysics,
+scene = game_scene(
+  background_color='black',
   anchor_point=(0.5,0.5),
-  #physics_debug=True,
+  physics = BilliardsPhysics,
+  physics_debug=True,
 )
 
 v = 240
@@ -51,14 +45,13 @@ platforms = (
   (120, "blue")
 )
 
-to_next_ball = vector.Vector(2*ball_radius,0)
+to_next_ball = vector.Vector(20,0)
 for angle, color in platforms:
   to_next_ball.degrees = angle
   ball_pos += to_next_ball
   x,y = ball_pos
   
   BoxNode(
-    radius=ball_radius,
     fill_color=color,
     line_color=color,
     category_bitmask=1,
@@ -67,23 +60,20 @@ for angle, color in platforms:
     position=(x,y),
   )
 
-p = ui.Path()
-p.line_to(10,10)
-scene.power_indicator = ShapeNode(p,
-  hidden=True,
-  no_body=True,
-  hull=True,
-  line_color=(1,1,1,0.3),
-  line_width=3,
-  glow_width=2,
-  parent=scene
-)
+BoxNode(
+  fill_color="red",
+  line_color="red",
+  category_bitmask=1,
+  collision_bitmask=1,
+  parent=scene,
+  position=(10,-150),
+  linear_gravity = 4000
+  )
 
-class CueBall(CircleNode):
+class playersprite(BoxNode):
   pass
     
-scene.cue_ball = CueBall(
-  radius=ball_radius,
+scene.player = playersprite(
   fill_color='white',
   parent=scene,
   category_bitmask=1,
@@ -91,4 +81,4 @@ scene.cue_ball = CueBall(
   position=(0, -125),
 )
   
-run(scene, 'full_screen', hide_title_bar=True)
+run(scene, 'full_screen', hide_title_bar=False)
