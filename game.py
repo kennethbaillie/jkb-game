@@ -30,27 +30,24 @@ class game_scene(Scene):
 scene = game_scene(
   background_color='black',
   anchor_point=(0.5,0.5),
-  physics = BilliardsPhysics,
+  #physics = BilliardsPhysics,
   physics_debug=True,
 )
 
-v = 240
-h = 130
-
-ball_pos = vector.Vector(0, 110)
-
 platforms = (
-  (60, "blue"),
-  (180, "blue"),
-  (120, "blue")
+  (-200, 200, 100, 10, "blue"),
+  (-100, 200, 100, 10, "blue"),
+  (-0, 200, 100, 10, "blue"),
+  (100, 200, 100, 10, "blue"),
+  (200, 200, 100, 10, "blue"),
+  (-200, -200, 100, 10, "red"),
+  (-100, -200, 100, 10, "red"),
+  (-0, -200, 100, 10, "red"),
+  (100, -200, 100, 10, "red"),
+  (200, -200, 100, 10, "red"),
 )
 
-to_next_ball = vector.Vector(20,0)
-for angle, color in platforms:
-  to_next_ball.degrees = angle
-  ball_pos += to_next_ball
-  x,y = ball_pos
-  
+for x,y,w,h, color in platforms:
   BoxNode(
     fill_color=color,
     line_color=color,
@@ -58,16 +55,9 @@ for angle, color in platforms:
     collision_bitmask=1,
     parent=scene,
     position=(x,y),
-  )
-
-BoxNode(
-  fill_color="red",
-  line_color="red",
-  category_bitmask=1,
-  collision_bitmask=1,
-  parent=scene,
-  position=(10,-150),
-  linear_gravity = 4000
+    size=(w,h),
+    mass=50,
+    affected_by_gravity = False,
   )
 
 class playersprite(BoxNode):
@@ -78,7 +68,7 @@ scene.player = playersprite(
   parent=scene,
   category_bitmask=1,
   collision_bitmask=1,
-  position=(0, -125),
+  position=(0, 0),
 )
   
 run(scene, 'full_screen', hide_title_bar=False)
