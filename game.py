@@ -7,26 +7,20 @@ import ui, math, random
 import vector
 
 class game_scene(Scene):
-  
-  def touch_moved(self, touch):
-    if self.player.collision_bitmask == 1:
+	
+	def touch_moved(self, touch):
+    if self.cue_ball.collision_bitmask == 1:
       p = ui.Path()
-      p.line_to(*(self.player.position - touch.location))
+      p.line_to(*(self.cue_ball.position - touch.location))
+      self.power_indicator.path = p
+      self.power_indicator.position = touch.location
+      self.power_indicator.hidden = False
     else:
-      self.player.position = touch.location
-  
+      self.cue_ball.position = touch.location
+	
   def touch_ended(self, touch):
-    if self.player.collision_bitmask == 1:
-      t = self.player.position - touch.location
-      self.player.velocity = (3*t.x, 3*t.y)
-    else:
-      play_area = Rect(-118, -228, 236, 456)
-      if play_area.contains_point(touch.location):
-        self.player.collision_bitmask = 1
-        self.player.category_bitmask = 1
-      else:
-        self.player.position = (0, -290)
-
+    self.player.velocity = (3, 0)
+    
 scene = game_scene(
   background_color='black',
   anchor_point=(0.5,0.5),
@@ -56,11 +50,11 @@ for x,y,w,h, color in platforms:
     parent=scene,
     position=(x,y),
     size=(w,h),
-    mass=50,
+    density=500,
     affected_by_gravity = False,
   )
 
-class playersprite(BoxNode):
+class playersprite(CircleNode):
   pass
     
 scene.player = playersprite(
