@@ -69,6 +69,7 @@ scene.player = playersprite(
   category_bitmask=1,
   collision_bitmask=1,
   position=(0, 0),
+  mass=0.5,
 )
   
 run(scene, 'full_screen', hide_title_bar=False)
