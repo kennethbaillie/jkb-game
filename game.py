@@ -7,8 +7,8 @@ import ui, math, random
 import vector
 
 class game_scene(Scene):
-	
-	def touch_moved(self, touch):
+
+  def touch_moved(self, touch):
     if self.cue_ball.collision_bitmask == 1:
       p = ui.Path()
       p.line_to(*(self.cue_ball.position - touch.location))
@@ -17,7 +17,7 @@ class game_scene(Scene):
       self.power_indicator.hidden = False
     else:
       self.cue_ball.position = touch.location
-	
+
   def touch_ended(self, touch):
     self.player.velocity = (3, 0)
     
@@ -34,11 +34,7 @@ platforms = (
   (-0, 200, 100, 10, "blue"),
   (100, 200, 100, 10, "blue"),
   (200, 200, 100, 10, "blue"),
-  (-200, -200, 100, 10, "red"),
-  (-100, -200, 100, 10, "red"),
-  (-0, -200, 100, 10, "red"),
-  (100, -200, 100, 10, "red"),
-  (200, -200, 100, 10, "red"),
+  (-200, -200, 1000, 30, "red"),
 )
 
 for x,y,w,h, color in platforms:
